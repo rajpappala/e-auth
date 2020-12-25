@@ -1,0 +1,22 @@
+{
+    "handler": {
+      "type": "Router",
+      "name": "_router",
+      "baseURI": "https://tomcat.apache.org/",
+      "capture": "all"
+    },
+    "heap": [
+      {
+        "name": "JwtSession",
+        "type": "JwtSession"
+      },
+      {
+        "name": "capture",
+        "type": "CaptureDecorator",
+        "config": {
+          "captureEntity": true,
+          "_captureContext": true
+        }
+      }
+    ]
+  }
