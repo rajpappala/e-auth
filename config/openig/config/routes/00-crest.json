@@ -1,4 +1,5 @@
 {
+  "condition": "${matches(request.uri.path, '^/home')}",
   "handler": "ReverseProxyHandler" 
 }
   

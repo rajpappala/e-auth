@@ -1,0 +1,113 @@
+{
+    "condition": "${matches(request.uri.path, '^/product/show')}",
+    "heap":[
+        {
+            "name":"productChain1",
+            "type": "Chain",
+            "config":{
+                "filters":[
+                    {
+                        "name":"ReqHeaders",
+                        "type":"HeaderFilter",
+                        "config": {
+                            "messageType": "REQUEST",
+                            "add": {
+                              "MyHeaderFilter_request": ["Added by HeaderFilter to request","Hello Header Req"]
+                            }
+                          }
+                    },
+                    {
+                        "type": "FileAttributesFilter",
+                        "config": {
+                          "file": "/opt/jboss/.openig/config/creds.txt",
+                          "key": "email",
+                          "value": "george@example.com",
+                          "target": "${attributes.credentials}"
+                        }
+                    },
+                    {
+                        "name":"ResHeaders",
+                        "type":"HeaderFilter",
+                        "config": {
+                            "messageType": "RESPONSE",
+                            "add": {
+                              "MyHeaderFilter_response": ["Added by HeaderFilter to response","${attributes.credentials.username}"]
+                            }
+                          }
+                    }
+                ],
+                "handler": {
+                    "name" : "eCom",
+                    "type": "ReverseProxyHandler",
+                    "comment": "Log request, pass it to the sample app, log response",
+                    "capture": "all",
+                    "baseURI": "http://192.168.0.108:7777/"
+                  }
+            }
+        },
+        {
+            "name":"productChain2",
+            "type": "Chain",
+            "config":{
+                "filters":[
+                    {
+                        "name":"ReqHeaders",
+                        "type":"HeaderFilter",
+                        "config": {
+                            "messageType": "REQUEST",
+                            "add": {
+                              "MyHeaderFilter_request": ["Added by HeaderFilter to request2","Hello Header Req"]
+                            }
+                          }
+                    },
+                    {
+                        "type": "FileAttributesFilter",
+                        "config": {
+                          "file": "/opt/jboss/.openig/config/creds.txt",
+                          "key": "email",
+                          "value": "kramer@example.com",
+                          "target": "${attributes.credentials}"
+                        }
+                    },
+                    {
+                        "name":"ResHeaders",
+                        "type":"HeaderFilter",
+                        "config": {
+                            "messageType": "RESPONSE",
+                            "add": {
+                              "MyHeaderFilter_response": ["Added by HeaderFilter to response2","${attributes.credentials.username}"]
+                            }
+                          }
+                    }
+                ],
+                "handler": {
+                    "name" : "eCom",
+                    "type": "ReverseProxyHandler",
+                    "comment": "Log request, pass it to the sample app, log response",
+                    "capture": "all",
+                    "baseURI": "http://192.168.0.108:7777/"
+                  }
+            }
+        }
+    ],
+    "handler":{
+        "name":"productsJandler",
+        "type":"DispatchHandler",
+        "config":{
+            "bindings" : [
+                {
+                    "condition" :"${matches(request.headers['username'][0], 'nag')}",
+                     "handler":"productChain1"
+                },
+                {
+                  "condition" :"${matches(request.headers['username'][0], 'raj')}",
+                  "handler":"productChain2"
+              },
+              {
+                "condition" :"${empty mrequest.headers['username']}",
+                "handler":"productChain2"
+            }
+            ]
+        }   
+    }
+}

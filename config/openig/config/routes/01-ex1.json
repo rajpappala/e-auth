@@ -1,0 +1,5 @@
+{
+    "handler": "ReverseProxyHandler" ,
+    "condition": "${matches(request.uri.path, '^/product/save')}"
+    
+}
