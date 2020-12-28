@@ -1,5 +1,5 @@
 {
-  "condition": "${matches(request.uri.path, '^/product/show1')}",
+  "condition": "${matches(request.uri.path, '^/product/show2')}",
   "handler": {
     "type": "Chain",
     "comment": "Base con guration de nes the capture decorator",
@@ -11,18 +11,21 @@
           "config": {
             "messageType": "REQUEST",
             "add": {
-              "MyHeaderFilter_request": ["Added by HeaderFilter to request","Hello Header Req"]
+              "MyHeaderFilter_request": [
+                "Added by HeaderFilter to request",
+                "Hello Header Req"
+              ]
             }
           }
         },
         {
-            "type": "FileAttributesFilter",
-            "config": {
-              "file": "/opt/jboss/.openig/config/creds.txt",
-              "key": "email",
-              "value": "george@example.com",
-              "target": "${attributes.credentials}"
-            }
+          "type": "FileAttributesFilter",
+          "config": {
+            "file": "/opt/jboss/.openig/config/creds.txt",
+            "key": "email",
+            "value": "george@example.com",
+            "target": "${attributes.credentials}"
+          }
         },
         {
           "type": "HeaderFilter",
@@ -30,13 +33,16 @@
           "config": {
             "messageType": "RESPONSE",
             "add": {
-              "MyHeaderFilter_response": ["Added by HeaderFilter to response","${attributes.credentials.username}"]
+              "MyHeaderFilter_response": [
+                "Added by HeaderFilter to response",
+                "${attributes.credentials.username}"
+              ]
             }
           }
         }
       ],
       "handler": {
-        "name" : "eCom",
+        "name": "eCom",
         "type": "ReverseProxyHandler",
         "comment": "Log request, pass it to the sample app, log response",
         "capture": "all",
