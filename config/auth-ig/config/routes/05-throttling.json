@@ -44,6 +44,10 @@
           "MyHeaderFilter_response": [
             "Added by HeaderFilter to response",
             "${attributes.credentials.username}"
+          ],
+          "system":[
+            "${env['JAVA_HOME']}",
+            "TEST"
           ]
         }
       }
