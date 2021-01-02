@@ -1,6 +1,17 @@
 {
-  "condition": "${matches(request.uri.path, '^/product/show3')}",
+  "condition": "${matches(request.uri.path, '^/product/show')}",
   "heap": [
+    {
+      "type": "ThrottlingFilter",
+      "name": "ThrottlingFilter-1",
+      "config": {
+        "requestGroupingPolicy": "",
+        "rate": {
+          "numberOfRequests": 6,
+          "duration": "10 s"
+        }
+      }
+    },
     {
       "name": "ReqHeaders",
       "type": "HeaderFilter",
@@ -41,7 +52,12 @@
       "name": "chain1",
       "type": "Chain",
       "config": {
-        "filters": ["ReqHeaders", "fileAttributesFilter", "ResHeaders"],
+        "filters": [
+          "ThrottlingFilter-1",
+          "ReqHeaders",
+          "fileAttributesFilter",
+          "ResHeaders"
+        ],
         "handler": {
           "name": "eCom",
           "type": "ReverseProxyHandler",
@@ -55,7 +71,7 @@
       "name": "chain2",
       "type": "Chain",
       "config": {
-        "filters": ["ReqHeaders", "fileAttributesFilter"],
+        "filters": ["ThrottlingFilter-1", "ReqHeaders", "fileAttributesFilter"],
         "handler": {
           "name": "eCom",
           "type": "ReverseProxyHandler",

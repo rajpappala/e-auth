@@ -1,5 +1,12 @@
 {
-  "condition": "${matches(request.uri.path, '^/home')}",
-  "handler": "ReverseProxyHandler" 
+  "name": "crest",
+  "handler": {
+    "type": "StaticResponseHandler",
+    "config": {
+      "status": 200,
+      "reason": "OK",
+      "entity": "Hello World!!"
+    }
+  },
+  "condition": "${matches(request.uri.path, '^/crest')}"
 }
-  
