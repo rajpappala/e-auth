@@ -1,0 +1,42 @@
+{
+  "condition": "${matches(request.uri.path, '^/testExpression')}",
+  "_name": "testExpression",
+  "_handler": {
+    "type": "Chain",
+    "config": {
+      "filters": [
+        {
+          "name": "ScriptableFilter-1",
+          "type": "ScriptableFilter",
+          "config": {
+            "type": "application/x-groovy",
+            "source": ["request.getHeaders().add('password',['ABCDEF'])"]
+          }
+        }
+      ],
+      "handler": {
+        "name": "StaticResponseHandler-1",
+        "type": "StaticResponseHandler",
+        "config": {
+          "status": 200,
+          "reason": "OK",
+          "entity": "${request.headers['username'][0]}  -- ${request['headers']['password'][0]} -- Ssdsdsds"
+        },
+        "headers": {
+          "content-type": ["application/json"]
+        }
+      }
+    }
+  },
+  "handler": {
+    "name": "StaticResponseHandler-1",
+    "type": "StaticResponseHandler",
+    "config": {
+        "status": 200,
+        "headers": {
+          "Content-Type": [ "application/json" ]
+        },
+        "entity": "{ \"username\": \"${request.headers['username'][0]}\", \"user_profile\":  \"testval\"} }"
+      }
+  }
+}
